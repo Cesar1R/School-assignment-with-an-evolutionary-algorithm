@@ -1,6 +1,7 @@
 #include<vector>
 #include<map>
 #include<random>
+#include<set> 
 
 #include"cromosomas.h"
 
@@ -26,7 +27,37 @@ struct estudiante{
 struct poblador {
     int n; //Cantidad de estudiantes
     int m; //Cantidad de escuelas
-    std::vector<std::pair<int, double>> chromosomas; 
+    double fitness; 
+
+    /*
+    key: id de la escuela 
+    val: cantidad de asientos disponibles en la escuela
+    */
+    std::map<int, int> escuela_asientos; 
+
+    std::vector<int> chromosomas; //Vector con una combinacion considerando los especificadores de las escuelas
+
+    poblador(int n_, int m_, std::vector<std::pair<int, int>> c_escuelas){
+        n = n_; m = m_; 
+        fitness = 0.0; 
+        chromosomas = std::vector<int> (n);
+
+        for(const std::pair<int, int> & escuela_i: c_escuelas){
+            escuela_asientos[escuela_i.first] = escuela_i.second;
+        }
+    }
+
+    bool asignar (int escuela_asignada, int id){
+        if(escuela_asientos[escuela_asignada] > 0){
+            chromosomas[id] = escuela_asignada;
+            escuela_asientos[escuela_asignada]--;
+            return true; // La asignacion se realizo con exito
+        }
+        else{ //No fue posible hacer la asignacion
+            return false;
+        }
+
+    }
 };
 
 double gen_random_number(double max_val){
