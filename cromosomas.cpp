@@ -2,6 +2,7 @@
 #include<map>
 #include<random>
 #include<set> 
+#include<map>
 
 #include"cromosomas.h"
 
@@ -35,7 +36,9 @@ struct poblador {
 
     std::vector<int> chromosomas; //Vector con una combinacion considerando los especificadores de las escuelas
 
-    poblador(int n_, int m_, std::vector<std::pair<int, int>> c_escuelas){
+    poblador(int n_, 
+             int m_, 
+             std::map<int, int> c_escuelas){
         n = n_; m = m_; 
         fitness = 0.0;
         chromosomas = std::vector<int> (n);
