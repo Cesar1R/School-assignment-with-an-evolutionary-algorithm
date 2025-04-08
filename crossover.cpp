@@ -1,4 +1,5 @@
-#include "crossover.h"
+#include"crossover.h"
+#include<random>
 
 poblador crossover(poblador* u, poblador* v){
     int n = u -> n; 
@@ -19,12 +20,17 @@ poblador crossover(poblador* u, poblador* v){
             u_i_asignado = false; 
         }
         if(v -> escuela_asientos[i]){
+
             v_i_asignado = false; 
         }
 
         //Si ninguna escuela tiene asientos disponibles, se hace una asignacion aleatoria
         if(!u_disponible && !v_disponible){
-            //Asignacion aleatoria
+            std::set<int>::iterator s_Iter;
+            
+            s_Iter = u -> escuelas_disp.begin();
+            escuela_asignada = *s_Iter;
+            u->escuelas_disp.erase(s_Iter);
         }
 
         //Si solo una tiene asientos disponibles, se asigna a esa
@@ -38,7 +44,13 @@ poblador crossover(poblador* u, poblador* v){
                 double sum_fit = u -> fitness + v -> fitness,
                        prob_v = (v -> fitness) / sum_fit, 
                        prob_u = (u -> fitness) / sum_fit; 
-                escuela_asignada = (prob_v > prob_u) ? v_cros:u_cros;
+
+                static std::random_device rd;
+                static std::mt19937 gen(rd());
+                std::uniform_real_distribution<> dis(0.0, 1.0);
+                
+                escuela_asignada = (dis(gen) <= prob_u) ? u->cromosomas[i] : v->cromosomas[i];
+
             }
         }
         //Validacion de que la escuela se asigno con esito
